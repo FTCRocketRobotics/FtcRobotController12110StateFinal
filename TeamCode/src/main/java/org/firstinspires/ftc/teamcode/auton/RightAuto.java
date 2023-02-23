@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
@@ -79,6 +80,7 @@ public class RightAuto extends LinearOpMode
         Servo Geoff = hardwareMap.servo.get("Geoff");
 
         Lr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //Ll.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //double IntegralSum = 0;
         //double kp = 0.01;
@@ -123,12 +125,12 @@ public class RightAuto extends LinearOpMode
         //Trajectories Here!!
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
                 .splineToConstantHeading(
-                        new Vector2d(17,19), Math.toRadians(0),
+                        new Vector2d(11,19), Math.toRadians(0),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                 )
                 .forward(
-                        33.5,
+                        38.5,
                         SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                 )
@@ -143,8 +145,40 @@ public class RightAuto extends LinearOpMode
                 .build();
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end(), false)
+                .forward(
+                        9.5,
+                        SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .build();
+
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end(), false)
                 .back(
-                        42,
+                        51.5,
+                        SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .build();
+
+        Trajectory traj5 = drive.trajectoryBuilder(traj4.end().plus(new Pose2d(0, 0, Math.toRadians(50))), false)
+                .forward(
+                        6,
+                        SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .build();
+
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end(), false)
+                .forward(
+                        5,
+                        SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .build();
+
+        Trajectory traj7 = drive.trajectoryBuilder(traj6.end(), false)
+                .back(
+                        12,
                         SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                 )
@@ -233,6 +267,7 @@ public class RightAuto extends LinearOpMode
 
         /* Actually do something useful */
 
+        Geoff.setPosition(0.5);
 
         if(tagOfInterest == null || tagOfInterest.id == Left)
         {
@@ -241,10 +276,22 @@ public class RightAuto extends LinearOpMode
             drive.followTrajectory(traj2);
 
             //insert code here to pick up cone from stack
-            moveLift(1000, Lr, Ll);
+            moveLift(1700, Lr, Ll, false);
+            drive.followTrajectory(traj3);
+            moveLift(500, Lr, Ll, false);
+            Geoff.setPosition(0.8);
+            sleep(750);
+            moveLift(1500, Lr, Ll, false);
 
-            //drive.followTrajectory(traj3);
-            //drive.turn(Math.toRadians(45));
+            drive.followTrajectory(traj4);
+            drive.turn(Math.toRadians(50));
+            drive.followTrajectory(traj5);
+            moveLift(2950, Lr, Ll, true);
+            drive.followTrajectory(traj6);
+            Geoff.setPosition(0.5);
+            sleep(500);
+            drive.followTrajectory(traj7);
+
 
         }
         else if(tagOfInterest.id == Middle)
@@ -254,10 +301,21 @@ public class RightAuto extends LinearOpMode
             drive.followTrajectory(traj2);
 
             //insert code here to pick up cone from stack
-            moveLift(1000, Lr, Ll);
+            moveLift(1700, Lr, Ll, false);
+            drive.followTrajectory(traj3);
+            moveLift(500, Lr, Ll, false);
+            Geoff.setPosition(0.8);
+            sleep(750);
+            moveLift(1500, Lr, Ll, false);
 
-            //drive.followTrajectory(traj3);
-            //drive.turn(Math.toRadians(45));
+            drive.followTrajectory(traj4);
+            drive.turn(Math.toRadians(50));
+            drive.followTrajectory(traj5);
+            moveLift(2950, Lr, Ll, true);
+            drive.followTrajectory(traj6);
+            Geoff.setPosition(0.5);
+            sleep(500);
+            drive.followTrajectory(traj7);
         }
         else
         {
@@ -266,10 +324,21 @@ public class RightAuto extends LinearOpMode
             drive.followTrajectory(traj2);
 
             //insert code here to pick up cone from stack
-            moveLift(1000, Lr, Ll);
+            moveLift(1700, Lr, Ll, false);
+            drive.followTrajectory(traj3);
+            moveLift(500, Lr, Ll, false);
+            Geoff.setPosition(0.8);
+            sleep(750);
+            moveLift(1500, Lr, Ll, false);
 
-            //drive.followTrajectory(traj3);
-            //drive.turn(Math.toRadians(45));
+            drive.followTrajectory(traj4);
+            drive.turn(Math.toRadians(50));
+            drive.followTrajectory(traj5);
+            moveLift(2950, Lr, Ll, true);
+            drive.followTrajectory(traj6);
+            Geoff.setPosition(0.5);
+            sleep(500);
+            drive.followTrajectory(traj7);
         }
 
     }
@@ -286,15 +355,24 @@ public class RightAuto extends LinearOpMode
 //        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
     }
 
-    void moveLift(double target, DcMotor Lr, DcMotor Ll) {
-            double IntegralSum =0;
-            double lastError = 0;
+    void moveLift(double target, DcMotor Lr, DcMotor Ll, boolean hold) {
+        double IntegralSum =0;
+        double lastError = 0;
 
-            double kp = 0.01;
-            double ki = 0.0001;
-            double kd = 0.0085;
+        double kp = 0.01;
+        double ki = 0.0001;
+        double kd = 0.0085;
 
-        while(Ll.getCurrentPosition() < (target - 10)) {
+        ElapsedTime et = new ElapsedTime();
+
+        while((Ll.getCurrentPosition() <= (target - 5)) || (Ll.getCurrentPosition() > (target + 5))) {
+            telemetry.addData("Target: ", target);
+            telemetry.addData("CurrentPosition: ", Ll.getCurrentPosition());
+            telemetry.update();
+
+            if(et.seconds() > 4){
+                break;
+            }
 
             double error = target - Ll.getCurrentPosition();
 
@@ -315,6 +393,13 @@ public class RightAuto extends LinearOpMode
             }
             Ll.setPower(Power);
             Lr.setPower(-Power);
+            if(hold){
+                ElapsedTime et2 = new ElapsedTime();
+                while(et.seconds() < 3) {
+                    Ll.setPower(0.25);
+                    Lr.setPower(-0.25);
+                }
+            }
         }
     }
 
