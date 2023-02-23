@@ -40,7 +40,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Autonomous
-public class BlueRightAuto extends LinearOpMode
+public class RightAuto extends LinearOpMode
 {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -80,13 +80,13 @@ public class BlueRightAuto extends LinearOpMode
 
         Lr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        double IntegralSum = 0;
-        double kp = 0.01;
-        double ki = 0.0001;
-        double kd = 0.0085;
+        //double IntegralSum = 0;
+        //double kp = 0.01;
+        //double ki = 0.0001;
+        //double kd = 0.0085;
 
-        double lastError = 0;
-        double target = 0;
+        //double lastError = 0;
+        //double target = 0;
         double lastClick = 0;
 
         int cones = 1;
@@ -241,11 +241,10 @@ public class BlueRightAuto extends LinearOpMode
             drive.followTrajectory(traj2);
 
             //insert code here to pick up cone from stack
+            moveLift(1000, Lr, Ll);
 
-            drive.followTrajectory(traj3);
-            drive.turn(Math.toRadians(45));
-
-
+            //drive.followTrajectory(traj3);
+            //drive.turn(Math.toRadians(45));
 
         }
         else if(tagOfInterest.id == Middle)
@@ -255,9 +254,10 @@ public class BlueRightAuto extends LinearOpMode
             drive.followTrajectory(traj2);
 
             //insert code here to pick up cone from stack
+            moveLift(1000, Lr, Ll);
 
-            drive.followTrajectory(traj3);
-            drive.turn(Math.toRadians(45));
+            //drive.followTrajectory(traj3);
+            //drive.turn(Math.toRadians(45));
         }
         else
         {
@@ -266,9 +266,10 @@ public class BlueRightAuto extends LinearOpMode
             drive.followTrajectory(traj2);
 
             //insert code here to pick up cone from stack
+            moveLift(1000, Lr, Ll);
 
-            drive.followTrajectory(traj3);
-            drive.turn(Math.toRadians(45));
+            //drive.followTrajectory(traj3);
+            //drive.turn(Math.toRadians(45));
         }
 
     }
@@ -284,4 +285,37 @@ public class BlueRightAuto extends LinearOpMode
 //        telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
 //        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
     }
+
+    void moveLift(double target, DcMotor Lr, DcMotor Ll) {
+            double IntegralSum =0;
+            double lastError = 0;
+
+            double kp = 0.01;
+            double ki = 0.0001;
+            double kd = 0.0085;
+
+        while(Ll.getCurrentPosition() < (target - 10)) {
+
+            double error = target - Ll.getCurrentPosition();
+
+            IntegralSum += error;
+
+            if (error < 1) {
+                IntegralSum = 0;
+            }
+            double derivative = (error - lastError);
+            lastError = error;
+
+            double Power = (error * kp) + (IntegralSum * ki) + (derivative * kd);
+
+            if (Power > 1) {
+                Power = 1;
+            } else if (Power < -1) {
+                Power = -1;
+            }
+            Ll.setPower(Power);
+            Lr.setPower(-Power);
+        }
+    }
+
 }
