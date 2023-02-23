@@ -144,7 +144,7 @@ public class BlueRightAuto extends LinearOpMode
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end(), false)
                 .back(
-                        5,
+                        42,
                         SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                 )
@@ -243,6 +243,7 @@ public class BlueRightAuto extends LinearOpMode
             //insert code here to pick up cone from stack
 
             drive.followTrajectory(traj3);
+            drive.turn(Math.toRadians(45));
 
 
 
@@ -256,6 +257,7 @@ public class BlueRightAuto extends LinearOpMode
             //insert code here to pick up cone from stack
 
             drive.followTrajectory(traj3);
+            drive.turn(Math.toRadians(45));
         }
         else
         {
@@ -266,6 +268,7 @@ public class BlueRightAuto extends LinearOpMode
             //insert code here to pick up cone from stack
 
             drive.followTrajectory(traj3);
+            drive.turn(Math.toRadians(45));
         }
 
     }
